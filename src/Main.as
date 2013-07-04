@@ -2,12 +2,18 @@ package
 {
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
+	import flash.events.MouseEvent;
+	
+	import btn.Add;
+	import btn.kill;
 	
 	public class Main extends Sprite
 	{
 		private var _tp:MovieClip;
 		private var _list:Vector.<String>;
 		private var _turnplateCtrl:TurnplateCtrl;
+		private var _btn:kill;
+		private var _add:Add;
 		public function Main()
 		{
 			_tp = new turnplate();
@@ -24,6 +30,36 @@ package
 			_turnplateCtrl = new TurnplateCtrl( _tp, _list, fire, show );
 			addChild( _tp );
 			_tp.x = 100;
+			
+			initBtns();
+		}
+		private function initBtns():void
+		{
+			_btn = new kill();
+			addChild( _btn );
+			_btn.x = 350;
+			_btn.y = 175;
+			_btn.addEventListener( MouseEvent.CLICK, run );
+			_btn.buttonMode = true;
+			_btn.stop();
+			
+			_add = new Add();
+			addChild( _add );
+			_add.x = 400;
+			_add.y = 175;
+			_add.addEventListener( MouseEvent.CLICK, add );
+			_add.buttonMode = true;
+			_add.stop();
+		}
+		
+		protected function add(e:MouseEvent):void
+		{
+			_turnplateCtrl.add( "太盛" );
+			_turnplateCtrl.start();
+		}
+		protected function run(e:MouseEvent):void
+		{
+			_turnplateCtrl.start();
 		}
 		private function fire(idx:int):void
 		{

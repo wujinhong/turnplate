@@ -2,12 +2,11 @@ package
 {
 	import flash.display.Bitmap;
 	import flash.display.MovieClip;
-	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	
-	public class TurnplateCtrl extends Sprite
+	public class TurnplateCtrl
 	{
 		private var _tp:MovieClip;
 		/**中间大扇形对应的字符串位置，从0开始**/
@@ -42,12 +41,32 @@ package
 			_show = show;
 			_point = new Point(0, 0);
 			init();
+			btn0Run();
+		}
+		/**
+		 *从头开始转动 
+		 */		
+		public function start():void
+		{
+			idx = 0;
+			initTF();
+			btn0Run();
+		}
+		/**
+		 *添加 名字
+		 */
+		public function add( s:String ):void
+		{
+			_list.push( s );
+			leng++;
+			top++;
 		}
 		private function init():void
 		{
 			leng = _list.length;
 			top = leng - 2;
-			idx = top - 1;
+			
+			idx = 0;
 			
 			_tp.addFrameScript( 9, down, _tp.totalFrames - 1, up );
 			
@@ -118,6 +137,16 @@ package
 				_tp.btns.btn5.gotoAndStop( 2 );
 			}
 		}
+		private function btn0Run():void
+		{
+			if ( idx + 1 != top )
+			{
+				time = top - idx - 1;
+				initAnimateTF();
+				_tp.play();
+				_tp.btns.visible = false;
+			}
+		}
 		private function run(e:MouseEvent):void
 		{
 			if ( _lastBtn == null )
@@ -129,13 +158,7 @@ package
 			{
 				case "btn0":
 				{
-					if ( idx + 1 != top )
-					{
-						time = top - idx - 1;
-						initAnimateTF();
-						_tp.play();
-						_tp.btns.visible = false;
-					}
+					btn0Run();
 					break;
 				}
 				case "btn1":
@@ -315,6 +338,7 @@ package
 			_tp.btns.btn2.tf.text = _list[ idx + 1 ] + "\n" + (idx + 2);
 			
 			//大扇形的文本
+//			_tp.btns.btn.tf.htmlText = "<font color=#FF0000>" + _list[ idx ] + "</font>" + "\n" + (idx + 1);//位图字体htmlText无效
 			_tp.btns.btn.tf.text = _list[ idx ] + "\n" + (idx + 1);
 			
 			if ( idx <= 0)
@@ -482,20 +506,20 @@ package
 			//未碰撞检测 到按钮，说明已离开之前按钮，原来之前按钮正常状态
 			if ( btn == null )
 			{
-				if ( _lastBtn )
-				{
-					state2( _lastBtn );
-				}
-				_lastBtn = btn;//未碰撞检测 到按钮,_lastBtn置null
+				fname();
 			}
 			else if (btn != _lastBtn)
+			{
+				fname();
+				state( btn );
+			}
+			function fname():void
 			{
 				if ( _lastBtn )
 				{
 					state2( _lastBtn );
 				}
-				state( btn );
-				_lastBtn = btn;
+				_lastBtn = btn;//未碰撞检测 到按钮,_lastBtn置null
 			}
 		}
 		private function fire(e:MouseEvent):void
