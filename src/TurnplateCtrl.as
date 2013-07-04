@@ -31,9 +31,9 @@ package
 		}
 		private function init():void
 		{
+			leng = _list.length;
 			top = leng - 2;
 			idx = top - 1;
-			leng = _list.length;
 			
 			_tp.addFrameScript( 9, down, _tp.totalFrames - 1, up );
 			
@@ -47,44 +47,89 @@ package
 			_tp.btns.btn0.tf.text = "返回\n第" + top + "战";
 		}
 		/**
+		 *单击按钮面板的六个可单击状态
+		 */
+		private function mouseEnabled():void
+		{
+			if ( idx + 2 >= leng )
+			{
+				_tp.btns.btn1.mouseEnabled = false;
+			}
+			else
+			{
+				_tp.btns.btn1.mouseEnabled = true;
+			}
+			if ( idx + 1 >= leng )
+			{
+				_tp.btns.btn2.mouseEnabled = false;
+			}
+			else
+			{
+				_tp.btns.btn2.mouseEnabled = true;
+			}
+			if ( idx <= 0 ) 
+			{
+				_tp.btns.btn3.mouseEnabled = false;
+			}
+			else
+			{
+				_tp.btns.btn3.mouseEnabled = true;
+			}
+			
+			if ( idx <= 1)
+			{
+				_tp.btns.btn4.mouseEnabled =  false;
+			}
+			else
+			{
+				_tp.btns.btn4.mouseEnabled = true;
+			}
+			
+			if ( idx <= 2)
+			{
+				_tp.btns.btn5.mouseEnabled =  false;
+			}
+			else
+			{
+				_tp.btns.btn5.mouseEnabled = true;
+			}
+		}
+		/**
 		 *单击按钮面板的六个文本，以及一个大扇形的文本
 		 */
 		private function initTF():void
 		{
-			
-			_tp.btns.btn1.tf.text = _list[ idx + 4 ] + "\n" + (idx + 5);
-			_tp.btns.btn2.tf.text = _list[ idx + 3 ] + "\n" + (idx + 4);
+			_tp.btns.btn1.tf.text = _list[ idx + 2 ] + "\n" + (idx + 3);
+			_tp.btns.btn2.tf.text = _list[ idx + 1 ] + "\n" + (idx + 2);
 			
 			//大扇形的文本
-			_tp.btns.btn.tf.text = _list[ idx + 2 ] + "\n" + (idx + 3);
+			_tp.btns.btn.tf.text = _list[ idx ] + "\n" + (idx + 1);
 			
-			
-			if ( leng < idx + 1)
+			if ( idx <= 0)
 			{
 				_tp.btns.btn3.tf.text = "";
 			}
 			else
 			{
-				_tp.btns.btn3.tf.text = _list[ idx + 1 ] + "\n" + (idx + 2);
+				_tp.btns.btn3.tf.text = _list[ idx - 1 ] + "\n" + (idx + 0);
 			}
 			
-			if ( leng < idx + 2)
+			if ( idx <= 1)
 			{
 				_tp.btns.btn4.tf.text = "";
 			}
 			else
 			{
-				_tp.btns.btn4.tf.text = _list[ idx + 0 ] + "\n" + (idx + 1);
+				_tp.btns.btn4.tf.text = _list[ idx - 2 ] + "\n" + (idx - 1);
 			}
 			
-			
-			if ( leng < idx + 3)
+			if ( idx <= 2)
 			{
 				_tp.btns.btn5.tf.text = "";
 			}
 			else
 			{
-				_tp.btns.btn5.tf.text = _list[ idx - 1 ] + "\n" + (idx + 0);
+				_tp.btns.btn5.tf.text = _list[ idx - 3 ] + "\n" + (idx - 2);
 			}
 		}
 		/**
@@ -92,23 +137,91 @@ package
 		 */
 		private function initAnimateTF():void
 		{
-			_tp.circle.mc0.tf.text = _list[ idx + 6 ] + "\n" + (idx + 7);
-			_tp.circle.mc1.tf.text = _list[ idx + 5 ] + "\n" + (idx + 6);
-			_tp.circle.mc2.tf.text = _list[ idx + 4 ] + "\n" + (idx + 5);
-			_tp.circle.mc3.tf.text = _list[ idx + 3 ] + "\n" + (idx + 4);
+			if ( idx + 4 >= leng )
+			{
+				_tp.circle.mc0.tf.text = "";
+			}
+			else
+			{
+				_tp.circle.mc0.tf.text = _list[ idx + 4 ] + "\n" + (idx + 5);
+			}
 			
-			_tp.circle.mc4.tf.text = _list[ idx + 2 ] + "\n" + (idx + 3);
-			_tp.circle.mc5.tf.text = _list[ idx + 2 ] + "\n" + (idx + 3);
+			if ( idx + 3 >= leng )
+			{
+				_tp.circle.mc1.tf.text = "";
+			}
+			else
+			{
+				_tp.circle.mc1.tf.text = _list[ idx + 3 ] + "\n" + (idx + 4);
+			}
 			
-			_tp.circle.mc6.tf.text = _list[ idx + 1 ] + "\n" + (idx + 2);
-			_tp.circle.mc7.tf.text = _list[ idx + 0 ] + "\n" + (idx + 1);
-			_tp.circle.mc8.tf.text = _list[ idx - 1 ] + "\n" + (idx + 0);
-			_tp.circle.mc9.tf.text = _list[ idx - 2 ] + "\n" + (idx - 1);
+			if ( idx + 2 >= leng )
+			{
+				_tp.circle.mc2.tf.text = "";
+			}
+			else
+			{
+				_tp.circle.mc2.tf.text = _list[ idx + 2 ] + "\n" + (idx + 3);
+			}
+			
+			if ( idx + 1 >= leng )
+			{
+				_tp.circle.mc3.tf.text = "";
+			}
+			else
+			{
+				_tp.circle.mc3.tf.text = _list[ idx + 1 ] + "\n" + (idx + 2);
+			}
+			
+			_tp.circle.mc4.tf.text = _list[ idx ] + "\n" + (idx + 1);
+			_tp.circle.mc5.tf.text = _list[ idx ] + "\n" + (idx + 1);
+			
+			if ( idx <= 0 )
+			{
+				_tp.circle.mc6.tf.text = "";
+			}
+			else
+			{
+				_tp.circle.mc6.tf.text = _list[ idx - 1 ] + "\n" + (idx + 0);
+			}
+			if ( idx <= 1 )
+			{
+				_tp.circle.mc7.tf.text = "";
+			}
+			else
+			{
+				_tp.circle.mc7.tf.text = _list[ idx - 2 ] + "\n" + (idx - 1);
+			}
+			
+			if ( idx <= 2 )
+			{
+				_tp.circle.mc8.tf.text = "";
+			}
+			else
+			{
+				_tp.circle.mc8.tf.text = _list[ idx - 3 ] + "\n" + (idx - 2);
+			}
+			
+			if ( idx <= 3 )
+			{
+				_tp.circle.mc9.tf.text = "";
+			}
+			else
+			{
+				_tp.circle.mc9.tf.text = _list[ idx - 4 ] + "\n" + (idx - 3);
+			}
 			
 			//三个大扇形的文本
-			_tp.frame.angle0.tf.text = _list[ idx + 4 ] + "\n" + (idx + 5);
-			_tp.frame.angle1.tf.text = _list[ idx + 3 ] + "\n" + (idx + 4);
-			_tp.frame.angle2.tf.text = _list[ idx + 2 ] + "\n" + (idx + 3);
+			_tp.frame.angle0.tf.text = _list[ idx + 1 ] + "\n" + (idx + 2);
+			_tp.frame.angle1.tf.text = _list[ idx ] + "\n" + (idx + 1);
+			if ( idx <= 0 )
+			{
+				_tp.frame.angle2.tf.text = "";
+			}
+			else
+			{
+				_tp.frame.angle2.tf.text = _list[ idx - 1 ] + "\n" + (idx - 0);
+			}
 		}
 		
 		private function initBtn():void
@@ -132,14 +245,14 @@ package
 		}
 		private function onOut1(evt:MouseEvent):void
 		{
-			_tp.btns.removeEventListener (MouseEvent.MOUSE_MOVE, onMove );
+			_tp.btns.removeEventListener(MouseEvent.MOUSE_MOVE, onMove );
 			_lastBtn = null;
 		}
-		private function onOver1 (evt:MouseEvent):void
+		private function onOver1(evt:MouseEvent):void
 		{
 			_tp.btns.addEventListener (MouseEvent.MOUSE_MOVE, onMove );
 		}
-		private function onMove (evt:MouseEvent):void
+		private function onMove(e:MouseEvent):void
 		{
 			var btn:MovieClip = null;
 			for (var i:int = 0;i < 6; i++ )
@@ -150,7 +263,7 @@ package
 				if (bmp.bitmapData.hitTest( new Point(0, 0), 0xFF, new Point(mcBtn.mouseX, mcBtn.mouseY)))
 				{
 					btn = mcBtn;
-//					trace(mcBtn.name);
+					//					trace(mcBtn.name);
 				}
 			}
 			
@@ -177,35 +290,35 @@ package
 		}
 		/*private function onOver(e:MouseEvent):void
 		{
-			switch( e.target.name )
-			{
-				case "btn0":
-				case "btn1":
-				case "btn2":
-				case "btn3":
-				case "btn4":
-				case "btn5":
-				{
-					e.target.gotoAndStop( 3 );
-					break;
-				}
-			}
+		switch( e.target.name )
+		{
+		case "btn0":
+		case "btn1":
+		case "btn2":
+		case "btn3":
+		case "btn4":
+		case "btn5":
+		{
+		e.target.gotoAndStop( 3 );
+		break;
+		}
+		}
 		}
 		private function onOut(e:MouseEvent):void
 		{
-			switch( e.target.name )
-			{
-				case "btn0":
-				case "btn1":
-				case "btn2":
-				case "btn3":
-				case "btn4":
-				case "btn5":
-				{
-					e.target.gotoAndStop( 1 );
-					break;
-				}
-			}
+		switch( e.target.name )
+		{
+		case "btn0":
+		case "btn1":
+		case "btn2":
+		case "btn3":
+		case "btn4":
+		case "btn5":
+		{
+		e.target.gotoAndStop( 1 );
+		break;
+		}
+		}
 		}*/
 		private function fire(e:MouseEvent):void
 		{
@@ -317,6 +430,7 @@ package
 				initTF();
 				_tp.btns.visible = true;
 				_tp.gotoAndStop( 1 );
+				onMove( null );
 			}
 		}
 		
@@ -333,6 +447,7 @@ package
 				initTF();
 				_tp.btns.visible = true;
 				_tp.gotoAndStop( 1 );
+				onMove( null );
 			}
 		}
 	}
