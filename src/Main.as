@@ -3,8 +3,10 @@ package
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
+	import flash.text.TextFormat;
 	
 	import btn.Add;
+	import btn.ObliqueText;
 	import btn.kill;
 	
 	public class Main extends Sprite
@@ -14,6 +16,8 @@ package
 		private var _turnplateCtrl:TurnplateCtrl;
 		private var _btn:kill;
 		private var _add:Add;
+		private var _oblique:ObliqueText;
+		
 		public function Main()
 		{
 			_tp = new turnplate();
@@ -32,6 +36,17 @@ package
 			_tp.x = 100;
 			
 			initBtns();
+			
+			obliqueText();
+		}
+		
+		private function obliqueText():void
+		{
+			_oblique = new ObliqueText();
+			addChild( _oblique );
+			_oblique.x = 400;
+			_oblique.y = 275;
+			_oblique.tf.htmlText = "<font color=#FF0000>位图字体htmlText无效</font>";
 		}
 		private function initBtns():void
 		{

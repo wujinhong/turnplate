@@ -5,6 +5,8 @@ package
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
+	import flash.text.TextField;
+	import flash.text.TextFormat;
 	
 	public class TurnplateCtrl
 	{
@@ -23,6 +25,7 @@ package
 		/** 转盘停止时执行的方法，此方法要有一个int参数**/
 		private var _show:Function;
 		private var _point:Point;
+		private var _color:uint;
 		/**
 		 * @param tp
 		 * 	转盘swf
@@ -70,10 +73,12 @@ package
 			
 			_tp.addFrameScript( 9, down, _tp.totalFrames - 1, up );
 			
-			initTF();
 			firstBtn();
 			initBtn();
 			mouseEnabled();
+			
+			_color = _tp.btns.btn.tf.defaultTextFormat.color;
+			initTF();
 		}
 		private function firstBtn():void
 		{
@@ -335,11 +340,35 @@ package
 		private function initTF():void
 		{
 			_tp.btns.btn1.tf.text = _list[ idx + 2 ] + "\n" + (idx + 3);
+			if ( idx + 2 >= top )
+			{
+				changeColor( _tp.btns.btn1.tf, 1 );
+			}
+			else
+			{
+				changeColor( _tp.btns.btn1.tf, 4 );
+			}
+			
 			_tp.btns.btn2.tf.text = _list[ idx + 1 ] + "\n" + (idx + 2);
+			if ( idx + 1 >= top )
+			{
+				changeColor( _tp.btns.btn2.tf, 1 );
+			}
+			else
+			{
+				changeColor( _tp.btns.btn2.tf, 4 );
+			}
 			
 			//大扇形的文本
-//			_tp.btns.btn.tf.htmlText = "<font color=#FF0000>" + _list[ idx ] + "</font>" + "\n" + (idx + 1);//位图字体htmlText无效
 			_tp.btns.btn.tf.text = _list[ idx ] + "\n" + (idx + 1);
+			if ( idx + 1 == top )
+			{
+				changeColor( _tp.btns.btn.tf, 2 );
+			}
+			else
+			{
+				changeColor( _tp.btns.btn.tf, 3 );
+			}
 			
 			if ( idx <= 0)
 			{
@@ -367,6 +396,44 @@ package
 			{
 				_tp.btns.btn5.tf.text = _list[ idx - 3 ] + "\n" + (idx - 2);
 			}
+		}
+		/**
+		 * 红绿蓝 
+		 * 第四个为原来默认颜色
+		 * @param tf
+		 * @param type
+		 */		
+		private function changeColor( tf:TextField, type:int ):void
+		{
+			var color:uint;
+			switch( type )
+			{
+				case 1:
+				{
+					color = 0xff0000;
+					break;
+				}
+				case 2:
+				{
+					color = 0x00ff00;
+					break;
+				}
+				case 3:
+				{
+					color = 0x0000ff;
+					break;
+				}
+				case 4:
+				{
+					color = _color;
+					break;
+				}
+			}
+			var format:TextFormat = tf.defaultTextFormat;
+			var str:String = tf.text;
+			format.color = color;
+			tf.defaultTextFormat = format;
+			tf.text = str;
 		}
 		/**
 		 * 底部动画10个文本，以及三个大扇形的文本
