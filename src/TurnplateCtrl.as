@@ -5,6 +5,7 @@ package
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
+	import flash.text.AntiAliasType;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
 	
@@ -77,8 +78,11 @@ package
 			initBtn();
 			mouseEnabled();
 			
-			_color = _tp.btns.btn.tf.defaultTextFormat.color;
+			_color = _tp.btns.btn.tf.textColor;;
 			initTF();
+			_tp.btns.btn.tf.filters = [];
+			_tp.btns.btn.tf.antiAliasType = AntiAliasType.ADVANCED;
+			_tp.btns.btn.tf.thickness = 200;
 		}
 		private function firstBtn():void
 		{
@@ -342,32 +346,32 @@ package
 			_tp.btns.btn1.tf.text = _list[ idx + 2 ] + "\n" + (idx + 3);
 			if ( idx + 2 >= top )
 			{
-				changeColor( _tp.btns.btn1.tf, 1 );
+				changeColor( _tp.btns.btn1.tf, 0xFF0000 );
 			}
 			else
 			{
-				changeColor( _tp.btns.btn1.tf, 4 );
+				changeColor( _tp.btns.btn1.tf, _color );
 			}
 			
 			_tp.btns.btn2.tf.text = _list[ idx + 1 ] + "\n" + (idx + 2);
 			if ( idx + 1 >= top )
 			{
-				changeColor( _tp.btns.btn2.tf, 1 );
+				changeColor( _tp.btns.btn2.tf, 0xFF0000 );
 			}
 			else
 			{
-				changeColor( _tp.btns.btn2.tf, 4 );
+				changeColor( _tp.btns.btn2.tf, _color );
 			}
 			
 			//大扇形的文本
 			_tp.btns.btn.tf.text = _list[ idx ] + "\n" + (idx + 1);
 			if ( idx + 1 == top )
 			{
-				changeColor( _tp.btns.btn.tf, 2 );
+				changeColor( _tp.btns.btn.tf, 0x00FF00 );
 			}
 			else
 			{
-				changeColor( _tp.btns.btn.tf, 3 );
+				changeColor( _tp.btns.btn.tf, 0x0000FF );
 			}
 			
 			if ( idx <= 0)
@@ -398,42 +402,26 @@ package
 			}
 		}
 		/**
-		 * 红绿蓝 
 		 * 第四个为原来默认颜色
 		 * @param tf
 		 * @param type
 		 */		
-		private function changeColor( tf:TextField, type:int ):void
+		private function changeColor( tf:TextField, color:uint ):void
 		{
-			var color:uint;
-			switch( type )
-			{
-				case 1:
-				{
-					color = 0xff0000;
-					break;
-				}
-				case 2:
-				{
-					color = 0x00ff00;
-					break;
-				}
-				case 3:
-				{
-					color = 0x0000ff;
-					break;
-				}
-				case 4:
-				{
-					color = _color;
-					break;
-				}
-			}
+			tf.textColor = color;
+		}
+		/**
+		 * 第四个为原来默认颜色
+		 * @param tf
+		 * @param type
+		 */		
+		private function changeColor2( tf:TextField, color:uint ):void
+		{
 			var format:TextFormat = tf.defaultTextFormat;
 			var str:String = tf.text;
 			format.color = color;
 			tf.defaultTextFormat = format;
-			tf.text = str;
+			tf.text = str;//文本值 不重新改变 新的TextFormat不会立即生效
 		}
 		/**
 		 * 底部动画10个文本，以及三个大扇形的文本
