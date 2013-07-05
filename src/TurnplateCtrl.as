@@ -156,8 +156,9 @@ package
 		}
 		
 		/**
-		 *正向转动，从0开始
-		 */		
+		 * 正向转动，默认从0开始，转至 i
+		 *  @param i 停止位置
+		 */
 		public function start( i:int = 0 ):void
 		{
 			if ( head( i ) )
@@ -168,7 +169,8 @@ package
 		}
 		/**
 		 *反向转动，从0开始
-		 */		
+		 * @param i 停止位置
+		 */
 		public function end( i:int ):void
 		{
 			if ( back( i ) )
@@ -545,7 +547,7 @@ package
 		 *按钮事件侦听
 		 *及MovieClip全stop 
 		 *及鼠标事件状态
-		 */		
+		 */
 		private function initBtn():void
 		{
 			_tp.stop();
