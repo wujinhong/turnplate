@@ -3,7 +3,6 @@ package
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
-	import flash.text.TextFormat;
 	
 	import btn.Add;
 	import btn.ObliqueText;
@@ -17,7 +16,6 @@ package
 		private var _btn:kill;
 		private var _add:Add;
 		private var _oblique:ObliqueText;
-		
 		public function Main()
 		{
 			_tp = new turnplate();

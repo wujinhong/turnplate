@@ -12,12 +12,14 @@ package
 	public class TurnplateCtrl
 	{
 		private var _tp:MovieClip;
-		/**中间大扇形对应的字符串位置，从0开始**/
+		/**中间大扇形对应的字符串位置，从0开始，转动时动态 +1 或者 —1 变化**/
 		private var idx:int = 0;
+		/**转盘指针，从0开始**/
+		private var _p:int = 0;
 		/**玩家最高第几战，从1开始**/
-		private var top:int = 0;
+		private var top:uint = 0;
 		/**每次旋转，扇形旋转次数，从1开始**/
-		private var time:int = 0;
+		private var time:uint = 0;
 		private var _list:Vector.<String>;
 		private var leng:uint;
 		private var _lastBtn:MovieClip;
@@ -27,6 +29,7 @@ package
 		private var _show:Function;
 		private var _point:Point;
 		private var _color:uint;
+		private var _colors:Vector.<uint>;
 		/**
 		 * @param tp
 		 * 	转盘swf
@@ -44,17 +47,13 @@ package
 			_func = func;
 			_show = show;
 			_point = new Point(0, 0);
+			
+			_colors = new Vector.<uint>();
+			_colors.push( 0xFF0000,0x00FF00,0x0000FF );
+			_colors.fixed = true;
+			
 			init();
-			btn0Run();
-		}
-		/**
-		 *从头开始转动 
-		 */		
-		public function start():void
-		{
-			idx = 0;
-			initTF();
-			btn0Run();
+			start( 5 );
 		}
 		/**
 		 *添加 名字
@@ -67,22 +66,22 @@ package
 		}
 		private function init():void
 		{
+			_color = _tp.btns.btn.tf.textColor;
+			_tp.btns.btn.tf.filters = [];
+			_tp.btns.btn.tf.antiAliasType = AntiAliasType.ADVANCED;
+			_tp.btns.btn.tf.thickness = 200;
+			
 			leng = _list.length;
 			top = leng - 2;
 			
-			idx = 0;
+			idx = _p = 0;
 			
 			_tp.addFrameScript( 9, down, _tp.totalFrames - 1, up );
 			
 			firstBtn();
 			initBtn();
 			mouseEnabled();
-			
-			_color = _tp.btns.btn.tf.textColor;;
 			initTF();
-			_tp.btns.btn.tf.filters = [];
-			_tp.btns.btn.tf.antiAliasType = AntiAliasType.ADVANCED;
-			_tp.btns.btn.tf.thickness = 200;
 		}
 		private function firstBtn():void
 		{
@@ -93,7 +92,7 @@ package
 		 */
 		private function mouseEnabled():void
 		{
-			if ( idx + 2 >= top )
+			if ( _p + 2 >= top )
 			{
 				_tp.btns.btn1.mouseEnabled = false;
 				_tp.btns.btn1.gotoAndStop( 1 );
@@ -103,7 +102,7 @@ package
 				_tp.btns.btn1.mouseEnabled = true;
 				_tp.btns.btn1.gotoAndStop( 2 );
 			}
-			if ( idx + 1 >= top )
+			if ( _p + 1 >= top )
 			{
 				_tp.btns.btn2.mouseEnabled = false;
 				_tp.btns.btn2.gotoAndStop( 1 );
@@ -113,7 +112,7 @@ package
 				_tp.btns.btn2.mouseEnabled = true;
 				_tp.btns.btn2.gotoAndStop( 2 );
 			}
-			if ( idx <= 0 ) 
+			if ( _p <= 0 ) 
 			{
 				_tp.btns.btn3.mouseEnabled = false;
 				_tp.btns.btn3.gotoAndStop( 1 );
@@ -124,7 +123,7 @@ package
 				_tp.btns.btn3.gotoAndStop( 2 );
 			}
 			
-			if ( idx <= 1)
+			if ( _p <= 1)
 			{
 				_tp.btns.btn4.mouseEnabled =  false;
 				_tp.btns.btn4.gotoAndStop( 1 );
@@ -135,7 +134,7 @@ package
 				_tp.btns.btn4.gotoAndStop( 2 );
 			}
 			
-			if ( idx <= 2)
+			if ( _p <= 2)
 			{
 				_tp.btns.btn5.mouseEnabled =  false;
 				_tp.btns.btn5.gotoAndStop( 1 );
@@ -146,15 +145,64 @@ package
 				_tp.btns.btn5.gotoAndStop( 2 );
 			}
 		}
-		private function btn0Run():void
+		
+		/**
+		 *正向转动，从0开始
+		 */		
+		public function start( i:int = 0 ):void
 		{
-			if ( idx + 1 != top )
+			if ( head( i ) )
 			{
-				time = top - idx - 1;
-				initAnimateTF();
+				setup( i );
 				_tp.play();
-				_tp.btns.visible = false;
 			}
+		}
+		/**
+		 *反向转动，从0开始
+		 */		
+		public function end( i:int ):void
+		{
+			if ( back( i ) )
+			{
+				setup( i );
+				_tp.gotoAndPlay( 11 );
+			}
+		}
+		/**
+		 * 判断能否正向转动 
+		 * @param i
+		 * @return 
+		 */		
+		private function head(i:int):Boolean
+		{
+			if ( i < top && i > _p )
+			{
+				time = i - _p;
+				return true;
+			}
+			return false;
+		}
+		/**
+		 * 判断能否正向转动
+		 * @param i
+		 * @return
+		 */		
+		private function back(i:int):Boolean
+		{
+			if ( i >= 0 && _p > i )
+			{
+				time = _p - i;
+				return true;
+			}
+			return false;
+		}
+		private function setup(i:int):void
+		{
+			_p = i;
+			initAnimateTF();
+			_tp.btns.visible = false;
+			initTF();
+			mouseEnabled();
 		}
 		private function run(e:MouseEvent):void
 		{
@@ -167,62 +215,32 @@ package
 			{
 				case "btn0":
 				{
-					btn0Run();
+					start( top - 1 );
 					break;
 				}
 				case "btn1":
 				{
-					if ( idx + 2 < top )
-					{
-						time = 2;
-						initAnimateTF();
-						_tp.play();
-						_tp.btns.visible = false;
-					}
+					start( _p + 2 );
 					break;
 				}
 				case "btn2":
 				{
-					if ( idx + 1 < top )
-					{
-						time = 1;
-						initAnimateTF();
-						_tp.play();
-						_tp.btns.visible = false;
-					}
+					start( _p + 1 );
 					break;
 				}
 				case "btn3":
 				{
-					if ( idx > 0 )
-					{
-						time = 1;
-						initAnimateTF();
-						_tp.gotoAndPlay( 11 );
-						_tp.btns.visible = false;
-					}
+					end( _p - 1 );
 					break;
 				}
 				case "btn4":
 				{
-					if ( idx > 1 )
-					{
-						time = 2;
-						initAnimateTF();
-						_tp.gotoAndPlay( 11 );
-						_tp.btns.visible = false;
-					}
+					end( _p - 2 );
 					break;
 				}
 				case "btn5":
 				{
-					if ( idx > 2 )
-					{
-						time = 3;
-						initAnimateTF();
-						_tp.gotoAndPlay( 11 );
-						_tp.btns.visible = false;
-					}
+					end( _p - 3 );
 					break;
 				}
 			}
@@ -243,7 +261,7 @@ package
 				}
 				case "btn1":
 				{
-					if ( idx + 2 < top )
+					if ( _p + 2 < top )
 					{
 						mc.gotoAndStop( 3 );
 					}
@@ -251,7 +269,7 @@ package
 				}
 				case "btn2":
 				{
-					if ( idx + 1 < top )
+					if ( _p + 1 < top )
 					{
 						mc.gotoAndStop( 3 );
 					}
@@ -259,7 +277,7 @@ package
 				}
 				case "btn3":
 				{
-					if ( idx > 0 ) 
+					if ( _p > 0 ) 
 					{
 						mc.gotoAndStop( 3 );
 					}
@@ -267,7 +285,7 @@ package
 				}
 				case "btn4":
 				{
-					if ( idx > 1)
+					if ( _p > 1)
 					{
 						mc.gotoAndStop( 3 );
 					}
@@ -275,7 +293,7 @@ package
 				}
 				case "btn5":
 				{
-					if ( idx > 2)
+					if ( _p > 2)
 					{
 						mc.gotoAndStop( 3 );
 					}
@@ -298,7 +316,7 @@ package
 				}
 				case "btn1":
 				{
-					if ( idx + 2 < top )
+					if ( _p + 2 < top )
 					{
 						mc.gotoAndStop( 2 );
 					}
@@ -306,7 +324,7 @@ package
 				}
 				case "btn2":
 				{
-					if ( idx + 1 < top )
+					if ( _p + 1 < top )
 					{
 						mc.gotoAndStop( 2 );
 					}
@@ -314,7 +332,7 @@ package
 				}
 				case "btn3":
 				{
-					if ( idx > 0 ) 
+					if ( _p > 0 ) 
 					{
 						mc.gotoAndStop( 2 );
 					}
@@ -322,7 +340,7 @@ package
 				}
 				case "btn4":
 				{
-					if ( idx > 1)
+					if ( _p > 1)
 					{
 						mc.gotoAndStop( 2 );
 					}
@@ -330,7 +348,7 @@ package
 				}
 				case "btn5":
 				{
-					if ( idx > 2)
+					if ( _p > 2)
 					{
 						mc.gotoAndStop( 2 );
 					}
@@ -343,20 +361,20 @@ package
 		 */
 		private function initTF():void
 		{
-			_tp.btns.btn1.tf.text = _list[ idx + 2 ] + "\n" + (idx + 3);
-			if ( idx + 2 >= top )
+			_tp.btns.btn1.tf.text = _list[ _p + 2 ] + "\n" + (_p + 3);
+			if ( _p + 2 >= top )
 			{
-				changeColor( _tp.btns.btn1.tf, 0xFF0000 );
+				changeColor( _tp.btns.btn1.tf, _colors[0] );
 			}
 			else
 			{
 				changeColor( _tp.btns.btn1.tf, _color );
 			}
 			
-			_tp.btns.btn2.tf.text = _list[ idx + 1 ] + "\n" + (idx + 2);
-			if ( idx + 1 >= top )
+			_tp.btns.btn2.tf.text = _list[ _p + 1 ] + "\n" + (_p + 2);
+			if ( _p + 1 >= top )
 			{
-				changeColor( _tp.btns.btn2.tf, 0xFF0000 );
+				changeColor( _tp.btns.btn2.tf, _colors[0] );
 			}
 			else
 			{
@@ -364,41 +382,41 @@ package
 			}
 			
 			//大扇形的文本
-			_tp.btns.btn.tf.text = _list[ idx ] + "\n" + (idx + 1);
-			if ( idx + 1 == top )
+			_tp.btns.btn.tf.text = _list[ _p ] + "\n" + (_p + 1);
+			if ( _p + 1 == top )
 			{
-				changeColor( _tp.btns.btn.tf, 0x00FF00 );
+				changeColor( _tp.btns.btn.tf, _colors[1] );
 			}
 			else
 			{
-				changeColor( _tp.btns.btn.tf, 0x0000FF );
+				changeColor( _tp.btns.btn.tf, _colors[2] );
 			}
 			
-			if ( idx <= 0)
+			if ( _p <= 0)
 			{
 				_tp.btns.btn3.tf.text = "";
 			}
 			else
 			{
-				_tp.btns.btn3.tf.text = _list[ idx - 1 ] + "\n" + (idx + 0);
+				_tp.btns.btn3.tf.text = _list[ _p - 1 ] + "\n" + (_p + 0);
 			}
 			
-			if ( idx <= 1)
+			if ( _p <= 1)
 			{
 				_tp.btns.btn4.tf.text = "";
 			}
 			else
 			{
-				_tp.btns.btn4.tf.text = _list[ idx - 2 ] + "\n" + (idx - 1);
+				_tp.btns.btn4.tf.text = _list[ _p - 2 ] + "\n" + (_p - 1);
 			}
 			
-			if ( idx <= 2)
+			if ( _p <= 2)
 			{
 				_tp.btns.btn5.tf.text = "";
 			}
 			else
 			{
-				_tp.btns.btn5.tf.text = _list[ idx - 3 ] + "\n" + (idx - 2);
+				_tp.btns.btn5.tf.text = _list[ _p - 3 ] + "\n" + (_p - 2);
 			}
 		}
 		/**
@@ -514,7 +532,11 @@ package
 				_tp.frame.angle2.tf.text = _list[ idx - 1 ] + "\n" + (idx - 0);
 			}
 		}
-		
+		/**
+		 *按钮事件侦听
+		 *及MovieClip全stop 
+		 *及鼠标事件状态
+		 */		
 		private function initBtn():void
 		{
 			_tp.stop();
@@ -599,11 +621,9 @@ package
 			}
 			else
 			{
-				initTF();
 				_tp.btns.visible = true;
 				_tp.gotoAndStop( 1 );
 				onMove( null );
-				mouseEnabled();
 				_show( idx + 1 );
 			}
 		}
@@ -618,11 +638,9 @@ package
 			}
 			else
 			{
-				initTF();
 				_tp.btns.visible = true;
 				_tp.gotoAndStop( 1 );
 				onMove( null );
-				mouseEnabled();
 				_show( idx + 1 );
 			}
 		}
