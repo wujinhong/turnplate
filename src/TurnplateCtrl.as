@@ -46,14 +46,13 @@ package
 			_list = list;
 			_func = func;
 			_show = show;
-			_point = new Point(0, 0);
+			_point = new Point( 0, 0 );
 			
 			_colors = new Vector.<uint>();
 			_colors.push( 0xFF0000,0x00FF00,0x0000FF );
 			_colors.fixed = true;
 			
 			init();
-			start( 5 );
 		}
 		/**
 		 *添加 名字
@@ -74,7 +73,15 @@ package
 			leng = _list.length;
 			top = leng - 2;
 			
-			idx = _p = 0;
+			if ( top > 7 ) 
+			{
+				idx = _p = top - 7;
+			}
+			else
+			{
+				idx = _p = 0;
+			}
+			
 			
 			_tp.addFrameScript( 9, down, _tp.totalFrames - 1, up );
 			
@@ -82,6 +89,8 @@ package
 			initBtn();
 			mouseEnabled();
 			initTF();
+			
+			start( top - 1 );
 		}
 		private function firstBtn():void
 		{
@@ -621,10 +630,7 @@ package
 			}
 			else
 			{
-				_tp.btns.visible = true;
-				_tp.gotoAndStop( 1 );
-				onMove( null );
-				_show( idx + 1 );
+				recover();
 			}
 		}
 		
@@ -638,11 +644,15 @@ package
 			}
 			else
 			{
-				_tp.btns.visible = true;
-				_tp.gotoAndStop( 1 );
-				onMove( null );
-				_show( idx + 1 );
+				recover();
 			}
+		}
+		private function recover():void
+		{
+			_tp.btns.visible = true;
+			_tp.gotoAndStop( 1 );
+			onMove( null );
+			_show( idx + 1 );
 		}
 	}
 }
