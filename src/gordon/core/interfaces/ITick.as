@@ -13,6 +13,6 @@
 		/**
 		 * enterframe的优先值
 		 */
-		function get tickPriority():Number;
+		function get priority():Number;
 	}
 }

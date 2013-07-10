@@ -1,11 +1,10 @@
 package gordon.core
 {
-	import gordon.core.interfaces.ITick;
-	
-	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.utils.getTimer;
+	
+	import gordon.core.interfaces.ITick;
 	
 	/**
 	 * 循环管理器 
@@ -15,22 +14,19 @@ package gordon.core
 	{
 		private static var _instance:Looper = null;
 		
-		private var _tickedComponents:Array = new Array();
-		private var _animatedComponents:Array = new Array();
-		private var _scheduledEvents:Array = new Array();
+		private var _ticks:Vector.<ITick> = new Vector.<ITick>();
 		private var _running:Boolean = false;
 		private var _lastTime:Number = -1;
 		private var _elapsed:Number = 0;
 		private var _interpolation:Number = 0;
-		private var _mainSprite:Sprite;
+		private var _stage:Stage;
 		private var _gameTime:Number = 0;
-		private var _delayTime:int = 1000/25;//按照帧频25，每帧的时间
+		private var _delayTime:int;//按照帧频，每帧的时间
 		private var _cumulativeTime:int = 0;//累计延迟时间
 		private var _oldTime:int = 0;
 		private var _newTime:int = 0;
-		private var _stage:Stage;
 
-		public static function getInstance():Looper
+		public static function get():Looper
 		{
 			if (!_instance)
 				_instance = new Looper();
@@ -38,9 +34,12 @@ package gordon.core
 			return _instance;
 		}
 		
-		public function Looper()
+		public function Looper( s:Singleton )
 		{
-			
+			if ( s == null ) 
+			{
+				throw new Error( "此对象是单例，请通过get()获得" );
+			}
 		}
 		
 		/**
@@ -50,9 +49,7 @@ package gordon.core
 		{
 			if (_running)
 				stop();
-			_tickedComponents = null;
-			_animatedComponents = null;
-			_scheduledEvents = null;
+			_ticks = null;
 			_instance = null;
 		}
 		
@@ -70,18 +67,19 @@ package gordon.core
 		 * Starts the game loop.
 		 * 传入舞台
 		 */
-		public function run(mainSprite:Sprite):void
+		public function run( sprite:Stage ):void
 		{
 			if (_running)
 				throw new Error("正在运行，无法再次运行");
 			
 			_running = true;
-			_mainSprite = mainSprite;
+			_stage = sprite;
+			_delayTime = 1000 /  _stage.frameRate;
 			_lastTime = -1;
 			_elapsed = 0;
 			_oldTime = getTimer();
 			
-			_mainSprite.addEventListener(Event.ENTER_FRAME, onEnterFrame);
+			_stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
 		
 		/**
@@ -89,21 +87,34 @@ package gordon.core
 		 */
 		public function stop():void
 		{
-			if (!_running)
+			if ( !_running )
 				throw new Error("已经停止，无法再停止");
 			
 			_running = false;
-			_mainSprite.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+			_stage.removeEventListener( Event.ENTER_FRAME, onEnterFrame );
 		}
 		
 		/**
 		 * 添加enterframe的组件
 		 */
-		public function addTickedComponent(component:ITick):void
+		public function addTickedComponent( ticker:ITick ):void
 		{
-			//			trace('add tick component...');
-			_tickedComponents.sortOn("tickPriority", Array.DESCENDING | Array.NUMERIC);
-			addComponent(component, _tickedComponents);
+			_ticks.sort( function( ui1:ITick, ui2:ITick ):Number
+			{
+				if( ui1.priority > ui2.priority )
+				{
+					return 1;
+				}
+				else if( ui1.priority < ui2.priority )
+				{
+					return -1;
+				}
+				else
+				{
+					return 0;
+				}
+			} );
+			addComponent( ticker, _ticks );
 		}
 		
 		/**
@@ -111,7 +122,7 @@ package gordon.core
 		 */
 		public function removeTickedComponent(component:ITick):void
 		{
-			removeComponent(component, _tickedComponents);
+			removeComponent(component, _ticks);
 		}
 		
 		/**
@@ -119,7 +130,7 @@ package gordon.core
 		 */
 		public function hasTickedComponent(component:ITick):Boolean
 		{
-			return _tickedComponents.indexOf(component) != -1;
+			return _ticks.indexOf(component) != -1;
 		}
 		
 		/**
@@ -158,37 +169,24 @@ package gordon.core
 		 */
 		private function advance():void
 		{
-			for each (var tickedComponent:ITick in _tickedComponents)
+			for each (var tickedComponent:ITick in _ticks)
 			tickedComponent.onTick();
-			
-			//			var n:int = _scheduledEvents.length - 1;
-			//			for (var i:int = n; i >= 0; i--)
-			//			{
-			//				var scheduledEvent:ScheduledEventInfo = _scheduledEvents[i];
-			//				if (scheduledEvent.time <= gameTime)
-			//				{
-			//					_scheduledEvents.splice(i, 1);
-			//					scheduledEvent.event(scheduledEvent.param);
-			//				}
-			//			}
-			//			
-			//			_gameTime++;
 		}
 		/**
 		 * 添加组件
 		 */
-		private function addComponent(component:Object, array:Array):void
+		private function addComponent( ticker:ITick, array:Vector.<ITick> ):void
 		{
-			if (array.indexOf(component) != -1)
+			if (array.indexOf(ticker) != -1)
 				throw new Error("这个组件已经添加过了。");
 			
-			array.push(component);
+			array.push(ticker);
 		}
 		
 		/**
 		 * 去除组件
 		 */
-		private function removeComponent(component:Object, array:Array):void
+		private function removeComponent(component:ITick, array:Vector.<ITick>):void
 		{
 			if (array.indexOf(component) == -1)
 				throw new Error("没有找到该组件，无法删除组件");
@@ -197,3 +195,4 @@ package gordon.core
 		}
 	}
 }
+internal class Singleton{}
