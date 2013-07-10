@@ -435,7 +435,7 @@ package
 		 * @param tf
 		 * @param type
 		 */		
-		private function changeColor( tf:TextField, color:uint ):void
+		private function changeColor2( tf:TextField, color:uint ):void
 		{
 			tf.textColor = color;
 		}
@@ -444,11 +444,12 @@ package
 		 * @param tf
 		 * @param type
 		 */		
-		private function changeColor2( tf:TextField, color:uint ):void
+		private function changeColor( tf:TextField, color:uint, size:uint = 30 ):void
 		{
 			var format:TextFormat = tf.defaultTextFormat;
 			var str:String = tf.text;
 			format.color = color;
+			format.size = size;
 			tf.defaultTextFormat = format;
 			tf.text = str;//文本值 不重新改变 新的TextFormat不会立即生效
 		}
@@ -610,9 +611,16 @@ package
 				_lastBtn = btn;//未碰撞检测 到按钮,_lastBtn置null
 			}
 		}
-		private function fire(e:MouseEvent):void
+		private function fire(e:Event):void
 		{
 			_func( idx + 1 );
+			
+			if ( e as MouseEvent )
+			{
+				trace( "lllllllllllllllllllllllllllllllllllllllllllllllllll" );
+//				( e as MouseEvent ).altKey
+//				e.altKey
+			}
 		}
 		protected function destroyTurn(e:Event):void
 		{
