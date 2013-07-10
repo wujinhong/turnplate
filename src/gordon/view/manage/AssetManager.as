@@ -2,7 +2,7 @@ package gordon.view.manage
 {
 	import flash.events.Event;
 	
-	import gordon.core.NoteObserver;
+	import gordon.core.Observer;
 
 	/**
 	 * AssetManager 是一个资源加载类，开始会从GAME单例里面获得要加载的路径，再逐个去加载
@@ -30,7 +30,7 @@ package gordon.view.manage
 		
 	    private var AssetClass:Class;
 	    
-	    private var _notification_manager:NoteObserver = NoteObserver.getInstance();
+	    private var _notification_manager:Observer = Observer.getInstance();
 	    
 	    private static var asset_manager:AssetManager;  // 资源管理器 单例管理
 	    

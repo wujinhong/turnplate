@@ -15,24 +15,20 @@ package gordon.core
 	{
 		private static var _instance:Looper = null;
 		
-		public var timeScale:Number = 1;
-		
-		private var _tickedComponents:Array = new Array(); //<ITickedComponent>
-		private var _animatedComponents:Array = new Array(); //<IAnimatedComponent>
-		private var _scheduledEvents:Array = new Array(); //<IAction>
+		private var _tickedComponents:Array = new Array();
+		private var _animatedComponents:Array = new Array();
+		private var _scheduledEvents:Array = new Array();
 		private var _running:Boolean = false;
 		private var _lastTime:Number = -1;
 		private var _elapsed:Number = 0;
 		private var _interpolation:Number = 0;
 		private var _mainSprite:Sprite;
 		private var _gameTime:Number = 0;
-		private var delay_time:int = 1000/25;//按照帧频25，每帧的时间
-		private var cumulative_time:int = 0;//累计延迟时间
-		private var old_time:int = 0;
-		private var new_time:int = 0;
+		private var _delayTime:int = 1000/25;//按照帧频25，每帧的时间
+		private var _cumulativeTime:int = 0;//累计延迟时间
+		private var _oldTime:int = 0;
+		private var _newTime:int = 0;
 		private var _stage:Stage;
-		private var zj_count:int;
-		
 
 		public static function getInstance():Looper
 		{
@@ -83,7 +79,7 @@ package gordon.core
 			_mainSprite = mainSprite;
 			_lastTime = -1;
 			_elapsed = 0;
-			old_time = getTimer();
+			_oldTime = getTimer();
 			
 			_mainSprite.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
@@ -131,30 +127,30 @@ package gordon.core
 		 */		
 		private function onEnterFrame(event:Event):void
 		{
-			new_time = getTimer();
-			cumulative_time +=(new_time - old_time);
-			var count:int = Math.round(cumulative_time/delay_time);
+			_newTime = getTimer();
+			_cumulativeTime +=(_newTime - _oldTime);
+			var count:int = Math.round(_cumulativeTime/_delayTime);
 			//			trace(new_time - old_time+'    '+Math.round(cumulative_time/delay_time));
 			if( count>0 && count <= 3 )
 			{
 				advance();
-				cumulative_time = 0;
+				_cumulativeTime = 0;
 			}
 			else if( count > 3 )
 			{
-				while(cumulative_time >= delay_time)
+				while(_cumulativeTime >= _delayTime)
 				{
 					advance();
-					cumulative_time = cumulative_time-delay_time;
+					_cumulativeTime = _cumulativeTime-_delayTime;
 				}
 			}
 			else
 			{
 				advance();
-				cumulative_time = 0;
+				_cumulativeTime = 0;
 			}
 			
-			old_time = getTimer();
+			_oldTime = getTimer();
 		}
 		
 		/**
@@ -200,11 +196,4 @@ package gordon.core
 			array.splice(array.indexOf(component), 1);
 		}
 	}
-}
-
-class ScheduledEventInfo
-{
-	public var time:Number;
-	public var event:Function;
-	public var param:Object;
 }

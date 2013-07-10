@@ -10,7 +10,7 @@ package gordon.core
 		/**
 		 * 信息管理器
 		 */
-		protected var _notification_manager:NoteObserver = NoteObserver.getInstance();
+		protected var _notification_manager:Observer = Observer.getInstance();
 		
 		/**
 		 * 消息记录器

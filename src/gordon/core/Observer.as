@@ -6,9 +6,9 @@ package gordon.core
 	 * 观察者，当有信息MESSAGE发出时，会自动响应已经注册了的函数
 	 * @author 
 	 */
-	public class NoteObserver
+	public class Observer
 	{
-		private static var _notification:NoteObserver; // 存储信息管理器对象
+		private static var _notification:Observer; // 存储信息管理器对象
 				
 		private var _notification_manager:Object = {}; // 消息列表
 		
@@ -19,7 +19,7 @@ package gordon.core
 		 * @param singleton
 		 * @throws Error
 		 */
-		public function NoteObserver(singleton:SingletonEnforce = null)
+		public function Observer(singleton:SingletonEnforce = null)
 		{	
 			if(singleton==null)
 				throw new Error('Notification Singleton Error!!');
@@ -31,10 +31,10 @@ package gordon.core
 		 * 获取信息管理器对象单例
 		 * @return NotificationObserver单例
 		 */
-		public static function getInstance():NoteObserver
+		public static function getInstance():Observer
 		{
 			if(_notification==null)
-				_notification = new NoteObserver(new SingletonEnforce());
+				_notification = new Observer(new SingletonEnforce());
 			
 			return _notification;
 		}
