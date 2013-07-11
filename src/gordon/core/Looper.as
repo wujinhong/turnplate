@@ -169,8 +169,8 @@ package gordon.core
 		 */
 		private function advance():void
 		{
-			for each (var tickedComponent:ITick in _ticks)
-			tickedComponent.onTick();
+			for each ( var tick:ITick in _ticks )
+				tick.onTick();
 		}
 		/**
 		 * 添加组件
@@ -180,18 +180,18 @@ package gordon.core
 			if (array.indexOf(ticker) != -1)
 				throw new Error("这个组件已经添加过了。");
 			
-			array.push(ticker);
+			array.push( ticker );
 		}
 		
 		/**
 		 * 去除组件
 		 */
-		private function removeComponent(component:ITick, array:Vector.<ITick>):void
+		private function removeComponent(component:ITick, vector:Vector.<ITick>):void
 		{
-			if (array.indexOf(component) == -1)
+			if (vector.indexOf(component) == -1)
 				throw new Error("没有找到该组件，无法删除组件");
 			
-			array.splice(array.indexOf(component), 1);
+			vector.splice(vector.indexOf(component), 1);
 		}
 	}
 }
