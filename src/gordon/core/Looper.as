@@ -67,13 +67,29 @@ package gordon.core
 		 * Starts the game loop.
 		 * 传入舞台
 		 */
-		public function run( sprite:Stage ):void
+		public function init( sprite:Stage ):void
 		{
 			if (_running)
 				throw new Error("正在运行，无法再次运行");
 			
 			_running = true;
 			_stage = sprite;
+			_delayTime = 1000 /  _stage.frameRate;
+			_lastTime = -1;
+			_elapsed = 0;
+			_oldTime = getTimer();
+			
+			_stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
+		}
+		/**
+		 * run  the game loop again.
+		 */
+		public function run():void
+		{
+			if (_running)
+				throw new Error("正在运行，无法再次运行");
+			
+			_running = true;
 			_delayTime = 1000 /  _stage.frameRate;
 			_lastTime = -1;
 			_elapsed = 0;
@@ -128,7 +144,7 @@ package gordon.core
 		/**
 		 * 是否已经添加了组件
 		 */
-		public function hasTickedComponent(component:ITick):Boolean
+		public function hasITick(component:ITick):Boolean
 		{
 			return _ticks.indexOf(component) != -1;
 		}
@@ -181,6 +197,11 @@ package gordon.core
 				throw new Error("这个组件已经添加过了。");
 			
 			array.push( ticker );
+			
+			if ( array.length == 1 )
+			{
+				run();
+			}
 		}
 		
 		/**
@@ -192,6 +213,11 @@ package gordon.core
 				throw new Error("没有找到该组件，无法删除组件");
 			
 			vector.splice(vector.indexOf(component), 1);
+			
+			if ( vector.length == 0 )
+			{
+				stop();
+			}
 		}
 	}
 }

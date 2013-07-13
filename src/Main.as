@@ -3,8 +3,10 @@ package
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
+	import flash.events.TextEvent;
 	import flash.text.AntiAliasType;
 	import flash.text.GridFitType;
+	import flash.text.TextField;
 	
 	import btn.Add;
 	import btn.ObliqueText;
@@ -18,6 +20,8 @@ package
 		private var _btn:kill;
 		private var _add:Add;
 		private var _oblique:ObliqueText;
+		private var tf:TextField;
+		
 		public function Main()
 		{
 			_tp = new turnplate();
@@ -39,6 +43,21 @@ package
 			initBtns();
 			
 			obliqueText();
+			
+			clickTextField();
+		}
+		
+		private function clickTextField():void
+		{
+			tf = new TextField()
+			tf.htmlText = "<font color='#FF0000'><a href='event:hello'>xxx</a>位图字体htmlText无效</font>";
+			tf.addEventListener( TextEvent.LINK, onTextClick );
+			addChild( tf );
+		}
+		
+		protected function onTextClick( e:TextEvent):void
+		{
+			trace( e, "kkkkkkkkkkkkkkkkkkkkk" );
 		}
 		/**
 		 *最好的循环方式 
@@ -57,7 +76,7 @@ package
 			addChild( _oblique );
 			_oblique.x = 400;
 			_oblique.y = 275;
-			_oblique.tf.htmlText = "<font color=#FF0000>位图字体htmlText无效</font>";
+			_oblique.tf.htmlText = "<font color='#FF0000'>位图字体htmlText无效</font>";
 			
 			_oblique.tf.filters = [];
 			
