@@ -98,9 +98,10 @@ package
 			
 			var i:int = 0;
 			
-			while ( i < 6 )//上面按钮层
+			while ( i < 6 )//上面按钮层 
 			{
 				mc.btns[ "btn" + i ].tf.filters = [];
+				mc.btns[ "btn" + i ].tf.cacheAsBitmap = true;
 				mc.btns[ "btn" + i ].tf.antiAliasType = AntiAliasType.ADVANCED;
 				mc.btns[ "btn" + i ].tf.thickness = 200;
 				mc.btns[ "btn" + i ].tf.textColor = _colors[ 2 ];
@@ -123,6 +124,7 @@ package
 			while ( i < 3 )
 			{
 				mc.frame[ "angle" + i ].tf.filters = [];
+				mc.frame[ "angle" + i ].tf.cacheAsBitmap = true;
 				mc.frame[ "angle" + i ].tf.antiAliasType = AntiAliasType.ADVANCED;
 				mc.frame[ "angle" + i ].tf.thickness = 200;
 				mc.frame[ "angle" + i ].tf.textColor = _colors[ 2 ];

@@ -55,9 +55,9 @@ package
 			
 			initBtns();
 			
-			obliqueText();
+//			obliqueText();
 			
-			clickTextField();
+//			clickTextField();
 		}
 		
 		private function clickTextField():void
