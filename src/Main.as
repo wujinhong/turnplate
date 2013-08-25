@@ -128,7 +128,7 @@ package
 		
 		protected function add(e:MouseEvent):void
 		{
-			_turnplateCtrl.add( "太盛", false );
+			_turnplateCtrl.addGeneralName( "太盛", false );
 			_turnplateCtrl.renew();
 		}
 		protected function run(e:MouseEvent):void

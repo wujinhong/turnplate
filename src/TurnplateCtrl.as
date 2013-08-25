@@ -28,13 +28,13 @@ package
 		/** 转盘停止时执行的方法**/
 		private var _hide:Function;
 		private var _point:Point;
-		private var _pass:Vector.<Boolean>;
+		private var _passGeneral:Vector.<Boolean>;
 		/** 蓝色：代表已经击杀过的怪物 **/
 		private var _killedColor:uint;
 		/** 红：代表现在不可以挑战的怪物；绿：代表现在可以挑战的最高层怪物；蓝：代表已经击杀过的怪物。 0xFF0000, 0x00FF00, 0x0000FF **/
 		private var _colors:Vector.<uint>;
 		/**怪物上限**/
-		private var _upper:uint = 100;
+		private var _openUpperGeneral:uint = 100;
 		/**
 		 * @param tp
 		 * 	转盘swf
@@ -52,7 +52,7 @@ package
 		{
 			mc = tp;
 			_list = list;
-			_pass = pass;
+			_passGeneral = pass;
 			_colors = colors;
 			_func = func;
 			_show = show;
@@ -68,14 +68,14 @@ package
 			leng = _list.length;
 			_top = leng - 2;
 			
-			if ( _pass.length > ( _upper - 4 ) && _pass[ _upper - 3 ] == true)//第98层后
+			if ( _passGeneral.length == _openUpperGeneral && _passGeneral[ _openUpperGeneral - 2 ] == false )//正在挑战倒数第二层的战将时
 			{
-				add( " ", false );
+				addGeneralName( " ", false );
 			}
-			
-			if ( _pass.length > ( _upper - 3 ) && _pass[ _upper - 2 ] == true)//第99层
+			else if ( _passGeneral.length == _openUpperGeneral && _passGeneral[ _openUpperGeneral - 2 ] == true )//倒数第二层的战将已挑战通过时
 			{
-				add( " ", false );
+				addGeneralName( " ", false );
+				addGeneralName( " ", false );
 			}
 			
 			setIndex();
@@ -224,7 +224,7 @@ package
 		{
 			if ( i < _top )
 			{
-				_pass[ i ] = true;
+				_passGeneral[ i ] = true;
 			}
 			if ( i == idx && !mc.isPlaying )
 			{
@@ -234,16 +234,16 @@ package
 		/**
 		 *添加名字
 		 */
-		public function add( s:String, b:Boolean ):void
+		public function addGeneralName( s:String, b:Boolean ):void
 		{
 			_list.push( s );
-			_pass.push( b );
+			_passGeneral.push( b );
 			leng++;
 			_top++;
 			
-			if ( _top > _upper )
+			if ( _top > _openUpperGeneral )
 			{
-				_top =  _upper;
+				_top =  _openUpperGeneral;
 			}
 		}
 		public function firstBtn(s:String):void
@@ -467,7 +467,7 @@ package
 		{
 			var rank:String = "";
 			
-			if ( ( _p + 3 == _upper && _pass[ _p + 2 ] ) || _p + 3 == _top  )//第二个扇形
+			if ( ( _p + 3 == _openUpperGeneral && _passGeneral[ _p + 2 ] ) || _p + 3 == _top  )//第二个扇形
 			{
 				mc.btns.btn1.tf.textColor = _colors[1];
 			}
@@ -479,7 +479,7 @@ package
 			{
 				mc.btns.btn1.tf.textColor = _killedColor;
 			}
-			if ( _p == _upper - 2 || _p == _upper - 1 )
+			if ( _p == _openUpperGeneral - 2 || _p == _openUpperGeneral - 1 )
 			{
 				rank = "";
 			}
@@ -489,7 +489,7 @@ package
 			}
 			mc.btns.btn1.tf.text = _list[ _p + 2 ] + "\n" + rank;
 			
-			if ( _p == _upper - 1 )//第三个扇形
+			if ( _p == _openUpperGeneral - 1 )//第三个扇形
 			{
 				rank = "";
 			}
@@ -498,7 +498,7 @@ package
 				rank = String(_p + 2);
 			}
 			mc.btns.btn2.tf.text = _list[ _p + 1 ] + "\n" + rank;
-			if ( ( _p + 2 == _upper && _pass[ _p + 1 ] ) || _p + 2 == _top )
+			if ( ( _p + 2 == _openUpperGeneral && _passGeneral[ _p + 1 ] ) || _p + 2 == _top )
 			{
 				mc.btns.btn2.tf.textColor = _colors[1];
 			}
@@ -523,7 +523,7 @@ package
 			}
 			
 			//大扇形的杀字是否显示
-			mc.btns.btn.kill.visible = _pass[ _p ];
+			mc.btns.btn.kill.visible = _passGeneral[ _p ];
 			
 			if ( _p <= 0)
 			{
@@ -557,7 +557,7 @@ package
 		 */
 		private function initAnimateTF():void
 		{
-			if ( idx + 4 >= leng || idx + 5 > _upper )//第一个扇形
+			if ( idx + 4 >= leng || idx + 5 > _openUpperGeneral )//第一个扇形
 			{
 				mc.circle.mc0.tf.text = "";
 			}
@@ -578,7 +578,7 @@ package
 				mc.circle.mc0.tf.textColor = _killedColor;
 			}
 			
-			if ( idx + 3 >= leng || idx + 4 > _upper )//第二个扇形
+			if ( idx + 3 >= leng || idx + 4 > _openUpperGeneral )//第二个扇形
 			{
 				mc.circle.mc1.tf.text = "";
 			}
@@ -599,7 +599,7 @@ package
 				mc.circle.mc1.tf.textColor = _killedColor;
 			}
 			
-			if ( idx + 2 >= leng || idx + 3 > _upper )//第三个扇形
+			if ( idx + 2 >= leng || idx + 3 > _openUpperGeneral )//第三个扇形
 			{
 				mc.circle.mc2.tf.text = "";
 			}
@@ -620,7 +620,7 @@ package
 				mc.circle.mc2.tf.textColor = _killedColor;
 			}
 			
-			if ( idx + 1 >= leng || idx + 2 > _upper )//第四个扇形
+			if ( idx + 1 >= leng || idx + 2 > _openUpperGeneral )//第四个扇形
 			{
 				mc.circle.mc3.tf.text = "";
 			}
