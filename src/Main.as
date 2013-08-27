@@ -45,10 +45,8 @@ package
 			_list.push( "92泽肃","93维延","94褚衡","95","96","97","98","99","100" );
 			addChild( _tp );
 			stopAllChildren( _tp );
-			var colors:Vector.<uint> = new Vector.<uint>();
-			colors.push( 0xFF0000, 0x00FF00, 0x0000FF );
-			colors.fixed = true;
-			
+			var colors:Vector.<uint> = new <uint>[ 0xFF0000, 0x00FF00, 0x0000FF ];
+			setNull ( colors );
 			_turnplateCtrl = new TurnplateCtrl( _tp, _list, _passed, colors, fire, show, hide );
 			
 			_tp.x = 100;
@@ -59,7 +57,10 @@ package
 			
 //			clickTextField();
 		}
-		
+		private function setNull( variety:* ):void
+		{
+			variety = null;
+		}
 		private function clickTextField():void
 		{
 			tf = new TextField()
