@@ -7,6 +7,7 @@ package
 	import flash.text.AntiAliasType;
 	import flash.text.GridFitType;
 	import flash.text.TextField;
+	import flash.utils.Dictionary;
 	
 	import btn.Add;
 	import btn.ObliqueText;
@@ -56,6 +57,25 @@ package
 //			obliqueText();
 			
 //			clickTextField();
+			
+			aboutDictionary();
+		}
+		
+		private function aboutDictionary():void
+		{
+			var _showBtn:Dictionary = new Dictionary();
+			_showBtn [ 20 ] = "life is ...";
+			_showBtn [ 30 ] = "life is ...aadd";
+			_showBtn [ 50 ] = "life is ...grea";
+			_showBtn [ 60 ] = "life is ...htrswtj";
+			_showBtn [ 70 ] = "life is ...grestht";
+			for ( var key:uint in _showBtn )
+			{
+				if ( key > 50 )
+				{
+					trace( _showBtn[ key ] );
+				}
+			}
 		}
 		private function setNull( variety:* ):void
 		{

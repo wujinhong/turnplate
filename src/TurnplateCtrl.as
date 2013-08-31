@@ -6,6 +6,7 @@ package
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.text.AntiAliasType;
+	import flash.utils.getTimer;
 	
 	public class TurnplateCtrl
 	{
@@ -829,6 +830,9 @@ package
 			mc.gotoAndStop( 1 );
 			onMove( null );
 			_show( idx + 1 );
+			
+			trace( "TurnplateCtrl.recover()", getTimer() );
+			
 		}
 	}
 }
