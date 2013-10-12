@@ -63,6 +63,31 @@ package
 		
 		private function aboutDictionary():void
 		{
+			
+			var vector:Vector.<uint> = new <uint>[1,2,3,4,5,6,7,8,9,0];
+			var count:uint = 0;
+			var _leng:int = vector.length;
+			for (var i:int = 0; i < vector.length; i++) 
+			{
+				var a:uint = vector[ i ];
+				if ( a == 1 || a == 2 || a == 3 ) 
+				{
+					vector.splice( i, 1 );
+				}
+				 count ++ ;
+			}
+			_leng = vector.length;
+			while ( _leng-- > 0)
+			{
+				a = vector[ _leng ];
+				if ( a == 1 || a == 2 || a == 3 ) 
+				{
+					vector.splice( i, 1 );
+				}
+				count ++ ;
+			}
+			
+			
 			var _showBtn:Dictionary = new Dictionary();
 			_showBtn [ 20 ] = "life is ...";
 			_showBtn [ 30 ] = "life is ...aadd";
